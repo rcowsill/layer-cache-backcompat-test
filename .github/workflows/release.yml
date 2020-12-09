@@ -19,8 +19,7 @@ jobs:
           return {
             inspect_image: [
               'test_project_scratch',
-              'hello-world',
-              'nothing'
+              'hello-world'
             ],
             os: [
               'ubuntu-latest',
@@ -63,7 +62,7 @@ jobs:
     - uses: rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
       name: Run rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
       with:
-        key: never-restored-docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-{hash}
+        key: never-restored-docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-sha:${{ github.sha }}-{hash}
         restore-keys: docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-
         skip-save: 'true'
 
@@ -106,7 +105,7 @@ jobs:
     - uses: rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
       name: Run rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
       with:
-        key: docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-{hash}
+        key: docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-sha:${{ github.sha }}-{hash}
 
     - run: ${{ matrix.build_command }}
 
