@@ -55,6 +55,7 @@ jobs:
     needs: setup
     strategy:
       matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+      fail-fast: false
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -62,11 +63,11 @@ jobs:
 
     - run: ${{ matrix.prepare_command }}
 
-    - uses: rcowsill/action-docker-layer-caching@test/fix-87-test-bc
-      name: Run rcowsill/action-docker-layer-caching@test/fix-87-test-bc
+    - uses: rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
+      name: Run rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
       with:
-        key: never-restored-docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-sha:${{ github.sha }}-{hash}
-        restore-keys: docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-sha:${{ github.sha }}-
+        key: never-restored-docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-{hash}
+        restore-keys: docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-
         skip-save: 'true'
 
     - name: Show cached image info
@@ -97,6 +98,7 @@ jobs:
     if: always() && needs.setup.result == 'success'
     strategy:
       matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+      fail-fast: false
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -104,10 +106,10 @@ jobs:
 
     - run: ${{ matrix.prepare_command }}
 
-    - uses: rcowsill/action-docker-layer-caching@test/fix-87-test-bc
-      name: Run rcowsill/action-docker-layer-caching@test/fix-87-test-bc
+    - uses: rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
+      name: Run rcowsill/action-docker-layer-caching@test/fix-87-test-bc-release
       with:
-        key: docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-sha:${{ github.sha }}-{hash}
+        key: docker-layer-caching-${{ matrix.os }}-${{ matrix.inspect_image }}-{hash}
 
     - run: ${{ matrix.build_command }}
 
